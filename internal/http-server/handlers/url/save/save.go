@@ -26,6 +26,7 @@ type Response struct {
 // TODO: move to config
 const aliasLength = 6
 
+//go:generate go run github.com/vektra/mockery/v2@v2.28.2 --name=URLSaverGetter
 type URLSaverGetter interface {
 	SaveURL(urlToSave string, alias string) (int64, error)
 	GetURL(alias string) (string, error)
@@ -65,6 +66,7 @@ func New(log *slog.Logger, urlSaverGetter URLSaverGetter) http.HandlerFunc {
 
 		alias := req.Alias
 		if alias == "" {
+			//alias = random.NewRandomString(aliasLength)
 			for {
 				alias = random.NewRandomString(aliasLength)
 				_, err := urlSaverGetter.GetURL(alias)
